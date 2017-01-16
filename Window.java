@@ -31,8 +31,12 @@ public class Window extends JFrame
 	{
 		for(int a = 0; a < personalized.size(); a++)
 		{
+			System.out.println("added");
 			add(personalized.get(a));
 		}
+		repaint();
+		setVisible(true);
+		System.out.println("Repainted");
 	}
 	
 	public class creationEvent implements ActionListener

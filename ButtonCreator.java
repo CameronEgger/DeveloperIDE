@@ -1,16 +1,24 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 public class ButtonCreator extends JFrame
 {
+	private JLabel namePrompt;
+	private JTextField name;
 	private JLabel cmd;
 	private JButton create;
+	private JButton cancel;
 	private JTextField text;
-	private ButtonCreator curr;
 	public ButtonCreator()
 	{
-		curr = this;
+		namePrompt = new JLabel("Enter name");
+		add(namePrompt);
+		
+		name = new JTextField(10);
+		add(name);
+		
 		cmd = new JLabel("Enter command");
 		add(cmd);
 		
@@ -23,8 +31,13 @@ public class ButtonCreator extends JFrame
 		creationEvent creation = new creationEvent();
 		create.addActionListener(creation);
 		
+		cancel = new JButton("Cancel");
+		add(cancel);
+		cancelEvent can = new cancelEvent();
+		cancel.addActionListener(can);
+		
 		setLayout(new FlowLayout());
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(500,500);
 		setVisible(true);
 		setTitle("Create Button");
@@ -35,30 +48,42 @@ public class ButtonCreator extends JFrame
 		public void actionPerformed(ActionEvent e)
 		{
 			String written = text.getText();
-			System.out.println(written);
-			JButton button = new JButton();
-			cmdEvent cmd = new cmdEvent(written);
+			String named = name.getText();
+			JButton button = new JButton(named);
+			cmdEvent cmd = new cmdEvent("ToDo",written);
 			button.addActionListener(cmd);
 			Window.personalized.add(button);
-			curr.dispose();
+			Execute.update();
+			dispose();
 		}
 		
 		public class cmdEvent implements ActionListener
 		{
 			private String com;
-			public cmdEvent(String cmd)
+			private String dir;
+			public cmdEvent(String direct, String cmd)
 			{
 				com = cmd;
+				dir = direct;
 			}
 			public void actionPerformed(ActionEvent e)
 			{
-				/* execute the command here*/
+				try {
+					
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				System.out.println("Is this even working");
 			}
 		}
 	}
 	
-	public void addButton()
+	public class cancelEvent implements ActionListener
 	{
-		
+		public void actionPerformed(ActionEvent e)
+		{
+			dispose();
+		}
 	}
 }

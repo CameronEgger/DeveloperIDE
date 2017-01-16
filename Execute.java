@@ -1,8 +1,15 @@
 
 public class Execute 
 {
+	static Window win;
 	public static void main(String[] args)
 	{
-		Window win = new Window();
+		win = new Window();
+	}
+	
+	public static void update()
+	{
+		System.out.println("Updated");
+		win.updateWindow();
 	}
 }
