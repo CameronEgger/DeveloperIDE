@@ -11,13 +11,23 @@ public class Window extends JFrame
 	private JButton buttonCreator;
 	private JButton open;
 	private JTextField toOpen;
-	private JMenuBar menu;
+	private JPanel buttons;
+	//private JMenuBar menu;
 	public Window()
 	{
+		setSize(1000,1000);
+		//still need to make it so that its size is set.
+		buttons = new JPanel();
+		JScrollPane allButtons = new JScrollPane(buttons);
+		//System.out.println(getHeight());
+		//System.out.println(getWidth());
+		allButtons.setPreferredSize(new Dimension(getWidth(),50));
+		allButtons.setBorder(BorderFactory.createLineBorder(Color.black));
+		add(allButtons);
 		
 		personalized = new ArrayList<JButton>();
-		menu = new JMenuBar();
-		add(menu);
+		//menu = new JMenuBar();
+		//add(menu);
 		
 		buttonCreator = new JButton("Create Process");
 		add(buttonCreator);
@@ -40,7 +50,7 @@ public class Window extends JFrame
 		
 		setLayout(new FlowLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1000,1000);
+		
 		setVisible(true);
 		setTitle("DeveloperIDE");
 	}
@@ -50,7 +60,7 @@ public class Window extends JFrame
 		for(int a = 0; a < personalized.size(); a++)
 		{
 			System.out.println("added");
-			add(personalized.get(a));
+			buttons.add(personalized.get(a));
 		}
 		repaint();
 		setVisible(true);
