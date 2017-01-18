@@ -12,6 +12,9 @@ public class Window extends JFrame
 	private JButton open;
 	private JTextField toOpen;
 	private JPanel buttons;
+	private FileWriter fw;
+	private File curr;
+	private JButton save;
 	//private JMenuBar menu;
 	public Window()
 	{
@@ -48,6 +51,12 @@ public class Window extends JFrame
 		JScrollPane scroller = new JScrollPane(edit);
 		add(scroller);
 		
+		save = new JButton("Save");
+		add(save);
+		
+		saveEvent sa = new saveEvent();
+		save.addActionListener(sa);
+		
 		setLayout(new FlowLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -82,7 +91,8 @@ public class Window extends JFrame
 			try
 			{
 				String read = "";
-				Scanner file = new Scanner(new File(toOpen.getText()));
+				curr = new File(toOpen.getText());
+				Scanner file = new Scanner(curr);
 				while(file.hasNextLine())
 				{
 					read += file.nextLine() + "\n";
@@ -93,6 +103,23 @@ public class Window extends JFrame
 			catch(Exception E)
 			{
 				System.out.println("File not found");
+			}
+		}
+	}
+	
+	public class saveEvent implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			try 
+			{
+				fw = new FileWriter(curr, false);
+				fw.write(edit.getText());
+				fw.close();
+			} 
+			catch (IOException e1) 
+			{
+				e1.printStackTrace();
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import java.lang.Runtime;
 import java.lang.Process;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -50,7 +51,7 @@ public class ButtonCreator extends JFrame
 		setTitle("Create Button");
 	}
 
-	public class creationEvent implements ActionListener
+	public class creationEvent implements ActionListener, Serializable
 	{
 		public void actionPerformed(ActionEvent e)
 		{
