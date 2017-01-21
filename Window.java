@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.io.*;
 
-public class Window extends JFrame
+public class Window
 {
 	public static ArrayList<JButton> personalized;
 	private JTextArea edit;
@@ -16,18 +16,23 @@ public class Window extends JFrame
 	private File curr;
 	private JButton save;
 	private JFileChooser fileChooser;
+	private JScrollPane allButtons;
+	private JFrame frame;
+	private boolean startup = true;
 	//private JMenuBar menu;
 	public Window()
 	{
-		setSize(1000,1000);
+		frame = new JFrame();
+		frame.addComponentListener(new resizeListener());
+		frame.setSize(1000,1000);
 		//still need to make it so that its size is set.
 		buttons = new JPanel();
-		JScrollPane allButtons = new JScrollPane(buttons);
+		allButtons = new JScrollPane(buttons);
 		//System.out.println(getHeight());
 		//System.out.println(getWidth());
-		allButtons.setPreferredSize(new Dimension(getWidth(),50));
+		allButtons.setPreferredSize(new Dimension(frame.getWidth(),50));
 		allButtons.setBorder(BorderFactory.createLineBorder(Color.black));
-		add(allButtons);
+		frame.add(allButtons);
 
 		personalized = new ArrayList<JButton>();
 		//menu = new JMenuBar();
@@ -35,17 +40,17 @@ public class Window extends JFrame
 
 		//the button to create new commands
 		buttonCreator = new JButton("Create Process");
-		add(buttonCreator);
+		frame.add(buttonCreator);
 
 		creationEvent create = new creationEvent();
 		buttonCreator.addActionListener(create);
 
 		//this is the text feild for manually typing in file paths
 		toOpen = new JTextField(25);
-		add(toOpen);
+		frame.add(toOpen);
 
 		open = new JButton("Open File");
-		add(open);
+		frame.add(open);
 		fileChooser = new JFileChooser();
 
 		openingEvent opener = new openingEvent();
@@ -54,19 +59,20 @@ public class Window extends JFrame
 		//this the area for editting files
 		edit = new JTextArea(50,80);
 		JScrollPane scroller = new JScrollPane(edit);
-		add(scroller);
+		frame.add(scroller);
 
 		save = new JButton("Save");
-		add(save);
+		frame.add(save);
 
 		saveEvent sa = new saveEvent();
 		save.addActionListener(sa);
 
-		setLayout(new FlowLayout());
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLayout(new FlowLayout());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		setVisible(true);
-		setTitle("DeveloperIDE");
+		frame.setVisible(true);
+		frame.setTitle("DeveloperIDE");
+		startup = false;
 	}
 
 	public void updateWindow()
@@ -76,9 +82,18 @@ public class Window extends JFrame
 			System.out.println("added");
 			buttons.add(personalized.get(a));
 		}
-		repaint();
-		setVisible(true);
+		frame.repaint();
+		frame.setVisible(true);
 		System.out.println("Repainted");
+	}
+	
+	public void resizeAll()
+	{
+		System.out.println("resized");
+		allButtons.setSize(new Dimension(frame.getWidth(),50));
+		System.out.println("Do i get here");
+		//frame.add(allButtons);
+		frame.repaint();
 	}
 
 	public class creationEvent implements ActionListener
@@ -137,4 +152,26 @@ public class Window extends JFrame
 			}
 		}
 	}
+
+	 private class resizeListener implements ComponentListener{
+	        public void componentHidden(ComponentEvent arg0) 
+	        {
+	        }
+	        public void componentMoved(ComponentEvent arg0) 
+	        {   
+	        }
+	        public void componentResized(ComponentEvent arg0) 
+	        {
+	        	if(!startup)
+	        	{
+	        		System.out.println(frame.getWidth());
+	        		resizeAll();
+	        	}
+	        	
+	        }
+	        public void componentShown(ComponentEvent arg0) 
+	        {
+
+	        }
+	    }
 }
