@@ -3,6 +3,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 
 public class Window
 {
@@ -51,6 +54,16 @@ public class Window
 		edit = new JTextArea(50,80);
 		JScrollPane scroller = new JScrollPane(edit);
 		frame.add(scroller);
+
+		//here we're deserializing the files in the process directory
+		new File("processes").mkdir();
+		File dir = new File(UserProcess.class.getProtectionDomain().getCodeSource().getLocation().getFile()+"processes/");
+  	File[] directoryListing = dir.listFiles();
+  	if (directoryListing != null) {
+    	for (File child : directoryListing) {
+      	System.out.println("found a file, i'll work out how to eat it laters");
+    	}
+  	}
 
 		frame.setLayout(new FlowLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
