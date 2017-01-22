@@ -25,7 +25,7 @@ public class Window
 		frame = new JFrame();
 		frame.addComponentListener(new resizeListener());
 		frame.setSize(1000,1000);
-
+		
 		//create an instance of fileChooser to use with the open command
 		fileChooser = new JFileChooser();
 
@@ -61,32 +61,32 @@ public class Window
 	}
 	private void createMenuBar() {
 
-		menubar = new JMenuBar();
+        menubar = new JMenuBar();
 
-		//create the file menu
-		JMenu file = new JMenu("File");
+				//create the file menu
+        JMenu file = new JMenu("File");
 
-		JMenuItem openMenuItem = new JMenuItem("Open");
-		openMenuItem.addActionListener(new openingEvent());
-		file.add(openMenuItem);
+        JMenuItem openMenuItem = new JMenuItem("Open");
+        openMenuItem.addActionListener(new openingEvent());
+        file.add(openMenuItem);
 
-		JMenuItem saveMenuItem = new JMenuItem("Save");
-		saveMenuItem.addActionListener(new saveEvent());
-		file.add(saveMenuItem);
+				JMenuItem saveMenuItem = new JMenuItem("Save");
+				saveMenuItem.addActionListener(new saveEvent());
+				file.add(saveMenuItem);
 
-		menubar.add(file);
+        menubar.add(file);
 
-		//create the process menu
-		JMenu process = new JMenu("Processes");
+				//create the process menu
+				JMenu process = new JMenu("Processes");
 
-		JMenuItem newProcessItem = new JMenuItem("New process");
-		newProcessItem.addActionListener(new creationEvent());
-		process.add(newProcessItem);
+				JMenuItem newProcessItem = new JMenuItem("New process");
+				newProcessItem.addActionListener(new creationEvent());
+				process.add(newProcessItem);
 
-		menubar.add(process);
+				menubar.add(process);
 
-		frame.setJMenuBar(menubar);
-	}
+        frame.setJMenuBar(menubar);
+  }
 
 	public void updateWindow()
 	{
@@ -167,24 +167,24 @@ public class Window
 	}
 
 	 private class resizeListener implements ComponentListener{
-					public void componentHidden(ComponentEvent arg0)
-					{
-					}
-					public void componentMoved(ComponentEvent arg0)
-					{
-					}
-					public void componentResized(ComponentEvent arg0)
-					{
-						if(!startup)
-						{
-							System.out.println(frame.getWidth());
-							resizeAll();
-						}
+	        public void componentHidden(ComponentEvent arg0)
+	        {
+	        }
+	        public void componentMoved(ComponentEvent arg0)
+	        {
+	        }
+	        public void componentResized(ComponentEvent arg0)
+	        {
+	        	if(!startup)
+	        	{
+	        		System.out.println(frame.getWidth());
+	        		resizeAll();
+	        	}
 
-					}
-					public void componentShown(ComponentEvent arg0)
-					{
+	        }
+	        public void componentShown(ComponentEvent arg0)
+	        {
 
-					}
-			}
+	        }
+	    }
 }
