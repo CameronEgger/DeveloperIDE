@@ -1,1 +1,3 @@
 *.class
+processes
+.DS_Store

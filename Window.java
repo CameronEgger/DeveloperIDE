@@ -3,6 +3,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 
 public class Window
 {
@@ -19,12 +22,20 @@ public class Window
 	private JScrollPane allButtons;
 	private JFrame frame;
 	private boolean startup = true;
-	//private JMenuBar menu;
+	private JMenuBar menubar;
 	public Window()
 	{
 		frame = new JFrame();
 		frame.addComponentListener(new resizeListener());
 		frame.setSize(1000,1000);
+
+		//create an instance of fileChooser to use with the open command
+		fileChooser = new JFileChooser();
+
+		//put all the menubar shiz in a different method b/c this constructor is complicated enough
+		createMenuBar();
+
+
 		//still need to make it so that its size is set.
 		buttons = new JPanel();
 		allButtons = new JScrollPane(buttons);
@@ -38,34 +49,21 @@ public class Window
 		//menu = new JMenuBar();
 		//add(menu);
 
-		//the button to create new commands
-		buttonCreator = new JButton("Create Process");
-		frame.add(buttonCreator);
-
-		creationEvent create = new creationEvent();
-		buttonCreator.addActionListener(create);
-
-		//this is the text feild for manually typing in file paths
-		toOpen = new JTextField(25);
-		frame.add(toOpen);
-
-		open = new JButton("Open File");
-		frame.add(open);
-		fileChooser = new JFileChooser();
-
-		openingEvent opener = new openingEvent();
-		open.addActionListener(opener);
 
 		//this the area for editting files
 		edit = new JTextArea(50,80);
 		JScrollPane scroller = new JScrollPane(edit);
 		frame.add(scroller);
 
-		save = new JButton("Save");
-		frame.add(save);
-
-		saveEvent sa = new saveEvent();
-		save.addActionListener(sa);
+		//here we're deserializing the files in the process directory
+		new File("processes").mkdir();
+		File dir = new File(UserProcess.class.getProtectionDomain().getCodeSource().getLocation().getFile()+"processes/");
+  	File[] directoryListing = dir.listFiles();
+  	if (directoryListing != null) {
+    	for (File child : directoryListing) {
+      	System.out.println("found a file, i'll work out how to eat it laters");
+    	}
+  	}
 
 		frame.setLayout(new FlowLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -74,6 +72,33 @@ public class Window
 		frame.setTitle("DeveloperIDE");
 		startup = false;
 	}
+	private void createMenuBar() {
+		menubar = new JMenuBar();
+
+		//create the file menu
+		JMenu file = new JMenu("File");
+
+		JMenuItem openMenuItem = new JMenuItem("Open");
+		openMenuItem.addActionListener(new openingEvent());
+		file.add(openMenuItem);
+
+		JMenuItem saveMenuItem = new JMenuItem("Save");
+		saveMenuItem.addActionListener(new saveEvent());
+		file.add(saveMenuItem);
+
+		menubar.add(file);
+
+		//create the process menu
+		JMenu process = new JMenu("Processes");
+
+		JMenuItem newProcessItem = new JMenuItem("New process");
+		newProcessItem.addActionListener(new creationEvent());
+		process.add(newProcessItem);
+
+		menubar.add(process);
+
+		frame.setJMenuBar(menubar);
+  }
 
 	public void updateWindow()
 	{
@@ -86,11 +111,11 @@ public class Window
 		frame.setVisible(true);
 		System.out.println("Repainted");
 	}
-	
+
 	public void resizeAll()
 	{
 		System.out.println("resized");
-		allButtons.setSize(new Dimension(frame.getWidth(),50));
+		allButtons.setPreferredSize(new Dimension(frame.getWidth(),50));
 		System.out.println("Do i get here");
 		//frame.add(allButtons);
 		frame.repaint();
@@ -127,9 +152,9 @@ public class Window
 				}
 
 			}
-			catch(Exception E)
+			catch(Exception dagnabit)
 			{
-				System.out.println("File not found");
+				dagnabit.printStackTrace();
 			}
 		}
 	}
@@ -153,25 +178,25 @@ public class Window
 		}
 	}
 
-	 private class resizeListener implements ComponentListener{
-	        public void componentHidden(ComponentEvent arg0) 
-	        {
-	        }
-	        public void componentMoved(ComponentEvent arg0) 
-	        {   
-	        }
-	        public void componentResized(ComponentEvent arg0) 
-	        {
-	        	if(!startup)
-	        	{
-	        		System.out.println(frame.getWidth());
-	        		resizeAll();
-	        	}
-	        	
-	        }
-	        public void componentShown(ComponentEvent arg0) 
-	        {
+	private class resizeListener implements ComponentListener{
+		public void componentHidden(ComponentEvent arg0)
+		{
+		}
+		public void componentMoved(ComponentEvent arg0)
+		{
+		}
+		public void componentResized(ComponentEvent arg0)
+		{
+			if(!startup)
+			{
+				System.out.println(frame.getWidth());
+				resizeAll();
+			}
 
-	        }
-	    }
+		}
+		public void componentShown(ComponentEvent arg0)
+		{
+
+		}
+	}
 }
