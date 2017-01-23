@@ -13,11 +13,18 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserProcess implements Serializable {
+  static final long serialVersionUID = -5555732262925771470L;
   private String name;
   private String command;
   public UserProcess(String n, String c){
+    System.out.println("constructor called");
     name = n;
     command = c;
+  }
+
+  //this has to be called seperately cuz when being unserialised the constructor is not called
+  public void init(){
+    // System.out.println("init button: "+name+" "+command);
     JButton button = new JButton(name);
     cmdEvent cmd = new cmdEvent(name,command);
     button.addActionListener(cmd);
@@ -26,6 +33,7 @@ public class UserProcess implements Serializable {
     save();
   }
 
+  //this method saves the command to a file
   private void save() {
     try {
       new File("processes").mkdir();
@@ -58,7 +66,7 @@ public class UserProcess implements Serializable {
     //this is when the button is clicked
     public void actionPerformed(ActionEvent e) {
       try {
-        System.out.println("Is this even working");
+        // System.out.println("Is this even working");
         //seperate the user's command input and feed it to the arguments of ProcessBuilder
         ProcessBuilder p = new ProcessBuilder(commandList);
         //this puts the stderr into the inputstream so there's not weird hanging issues

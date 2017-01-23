@@ -42,6 +42,8 @@ public class ButtonCreator extends JFrame
 		setSize(500,500);
 		setVisible(true);
 		setTitle("Create Button");
+
+		getRootPane().setDefaultButton(create);
 	}
 
 	public class creationEvent implements ActionListener
@@ -52,6 +54,7 @@ public class ButtonCreator extends JFrame
 			String written = text.getText();
 			String named = name.getText();
 			UserProcess newProcess = new UserProcess(named,written);
+			newProcess.init();
 			//anything after
 			dispose();
 		}

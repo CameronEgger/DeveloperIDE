@@ -55,22 +55,33 @@ public class Window
 		JScrollPane scroller = new JScrollPane(edit);
 		frame.add(scroller);
 
-		//here we're deserializing the files in the process directory
-		new File("processes").mkdir();
-		File dir = new File(UserProcess.class.getProtectionDomain().getCodeSource().getLocation().getFile()+"processes/");
-  	File[] directoryListing = dir.listFiles();
-  	if (directoryListing != null) {
-    	for (File child : directoryListing) {
-      	System.out.println("found a file, i'll work out how to eat it laters");
-    	}
-  	}
-
 		frame.setLayout(new FlowLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frame.setVisible(true);
 		frame.setTitle("DeveloperIDE");
 		startup = false;
+	}
+	
+	public void populateFromFiles(){
+		//here we're deserializing the files in the process directory
+		new File("processes").mkdir();
+		File dir = new File(UserProcess.class.getProtectionDomain().getCodeSource().getLocation().getFile()+"processes/");
+		File[] directoryListing = dir.listFiles();
+		if (directoryListing != null) {
+			for (File child : directoryListing) {
+				try{
+					ObjectInputStream objIn = new ObjectInputStream(new FileInputStream(child));
+					UserProcess process = (UserProcess) objIn.readObject();
+					process.init();
+					System.out.println("took a command from a file!");
+					// System.out.println("found a file, i'll work out how to eat it laters");
+				}
+				catch(Exception rats){
+					rats.printStackTrace();
+				}
+			}
+		}
 	}
 	private void createMenuBar() {
 		menubar = new JMenuBar();
