@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 public class Window
 {
-	public static ArrayList<JButton> personalized;
+	public static ArrayList<UserProcess> personalized;
 	private JTextArea edit;
 	private JButton buttonCreator;
 	private JButton open;
@@ -45,7 +45,7 @@ public class Window
 		allButtons.setBorder(BorderFactory.createLineBorder(Color.black));
 		frame.add(allButtons);
 
-		personalized = new ArrayList<JButton>();
+		personalized = new ArrayList<UserProcess>();
 		//menu = new JMenuBar();
 		//add(menu);
 
@@ -62,7 +62,7 @@ public class Window
 		frame.setTitle("DeveloperIDE");
 		startup = false;
 	}
-	
+
 	public void populateFromFiles(){
 		//here we're deserializing the files in the process directory
 		new File("processes").mkdir();
@@ -106,6 +106,10 @@ public class Window
 		newProcessItem.addActionListener(new creationEvent());
 		process.add(newProcessItem);
 
+		JMenuItem settingsProcessItem = new JMenuItem("Settings");
+		settingsProcessItem.addActionListener(new settingsEvent());
+		process.add(settingsProcessItem);
+
 		menubar.add(process);
 
 		frame.setJMenuBar(menubar);
@@ -115,9 +119,30 @@ public class Window
 	{
 		for(int a = 0; a < personalized.size(); a++)
 		{
-			System.out.println("added");
-			buttons.add(personalized.get(a));
+			//button is an instance of UserProcess
+			UserProcess button = personalized.get(a);
+			//if the button is enabled but not drawn yet, we want to add it to the button list
+			if(button.isEnabled() && !button.isDrawn()){
+				// System.out.println("added "+button.toString());
+				// System.out.println(button.getButton());
+				buttons.add(button.getButton());
+				button.setDrawn(true);
+			}
+			//if the button is disabled but still drawn, we want to make sure it isn't drawn
+			else if(!button.isEnabled() && button.isDrawn()){
+
+				button.setDrawn(false);
+				//this should take the button out of the jpanel
+				buttons.remove(button.getButton());
+				buttons.revalidate();
+				buttons.repaint();
+				// System.out.println("removed "+button.toString());
+
+			}
+				// System.out.println("added");
+
 		}
+		frame.revalidate();
 		frame.repaint();
 		frame.setVisible(true);
 		System.out.println("Repainted");
@@ -186,6 +211,13 @@ public class Window
 			{
 				e1.printStackTrace();
 			}
+		}
+	}
+
+	//for the settings button from under the process menu
+	public class settingsEvent implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			SettingsMenu settings = new SettingsMenu();
 		}
 	}
 

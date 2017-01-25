@@ -16,21 +16,55 @@ public class UserProcess implements Serializable {
   static final long serialVersionUID = -5555732262925771470L;
   private String name;
   private String command;
+  private boolean enabled;
+  private boolean drawn;
+  private JButton button;
+
   public UserProcess(String n, String c){
-    System.out.println("constructor called");
     name = n;
     command = c;
+    enabled = true;
+    drawn = false;
   }
 
   //this has to be called seperately cuz when being unserialised the constructor is not called
   public void init(){
     // System.out.println("init button: "+name+" "+command);
-    JButton button = new JButton(name);
+    this.button = new JButton(name);
     cmdEvent cmd = new cmdEvent(name,command);
     button.addActionListener(cmd);
-    Window.personalized.add(button);
+    drawn = false;
+    Window.personalized.add(this);
     Execute.update();
     save();
+  }
+
+  public boolean isEnabled(){
+    return enabled;
+  }
+
+  public boolean isDrawn(){
+    return drawn;
+  }
+
+  public void setDrawn(boolean bool){
+    drawn = bool;
+  }
+
+  public JButton getButton(){
+    return button;
+  }
+
+  public void enable() {
+    enabled = true;
+  }
+
+  public void disable() {
+    enabled = false;
+  }
+
+  public String toString(){
+    return name;
   }
 
   //this method saves the command to a file
