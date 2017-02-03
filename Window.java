@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 public class Window
 {
 	public static ArrayList<UserProcess> personalized;
+	public static ArrayList<Button> fileButtons;
 	private JTextArea edit;
 	private JButton buttonCreator;
 	private JButton open;
@@ -23,8 +24,11 @@ public class Window
 	private JFrame frame;
 	private boolean startup = true;
 	private JMenuBar menubar;
+	private JPanel files;
+	private JScrollPane allFiles;
 	public Window()
 	{
+		fileButtons = new ArrayList<Button>();
 		frame = new JFrame();
 		frame.addComponentListener(new resizeListener());
 		frame.setSize(1000,1000);
@@ -48,13 +52,18 @@ public class Window
 		personalized = new ArrayList<UserProcess>();
 		//menu = new JMenuBar();
 		//add(menu);
-
+		files = new JPanel();
+		allFiles = new JScrollPane(files);
+		allFiles.setPreferredSize(new Dimension(900,50));
+		frame.add(allFiles);
 
 		//this the area for editting files
-		edit = new JTextArea(50,80);
+		edit = new JTextArea(40,80);
 		JScrollPane scroller = new JScrollPane(edit);
 		frame.add(scroller);
-
+		
+		phials = new HashMap<String, String>();
+		
 		frame.setLayout(new FlowLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -142,6 +151,10 @@ public class Window
 				// System.out.println("added");
 
 		}
+		for(int a = 0; a < fileButtons.size(); a++)
+		{
+			files.add(fileButtons.get(a));
+		}
 		frame.revalidate();
 		frame.repaint();
 		frame.setVisible(true);
@@ -165,9 +178,11 @@ public class Window
 			ButtonCreator create = new ButtonCreator();
 		}
 	}
-
+	private	HashMap<String, String> phials;
+	private String currentlyDisplayed;
 	public class openingEvent implements ActionListener
 	{
+		
 		//triggered when user clicks open file button
 		public void actionPerformed(ActionEvent e)
 		{
@@ -176,14 +191,33 @@ public class Window
 				String read = "";
 				int returnCode = fileChooser.showOpenDialog(null);
 
-				if(returnCode == JFileChooser.APPROVE_OPTION){
+				if(returnCode == JFileChooser.APPROVE_OPTION)
+				{
 					curr = fileChooser.getSelectedFile();
+					
 					Scanner file = new Scanner(curr);
 					while(file.hasNextLine())
 					{
 						read += file.nextLine() + "\n";
 					}
-					edit.setText(read);
+					//resetting each time so that the file does not auto save when a new file is opened.
+					//otherwise all progress would be lost if i just reread the file.
+					if(edit.getText().equals(""))
+					{
+						edit.setText(read);
+						phials.put(curr.toString(), read);
+					}
+					else
+					{
+						phials.put(currentlyDisplayed, edit.getText());
+						edit.setText(read);
+						phials.put(curr.toString(), read);
+					}
+					Button fileOpen = new Button(curr.toString());
+					fileOpener phial = new fileOpener(curr.toString());
+					fileOpen.addActionListener(phial);
+					fileButtons.add(fileOpen);
+					currentlyDisplayed = curr.toString();
 					Execute.update();
 				}
 
@@ -194,7 +228,30 @@ public class Window
 			}
 		}
 	}
-
+	//the buttons with the file names on them
+	public class fileOpener implements ActionListener
+	{
+		private String fileName;
+		public fileOpener(String name)
+		{
+			fileName = name;
+		}
+		public void actionPerformed(ActionEvent e)
+		{
+			if(edit.getText().equals(""))
+			{
+				System.out.println("This shouldn't happen");
+				edit.setText(phials.get(fileName));
+			}
+			else
+			{
+				System.out.println(currentlyDisplayed + " " + fileName);
+				phials.put(currentlyDisplayed, edit.getText());
+				currentlyDisplayed = fileName;
+				edit.setText(phials.get(fileName));
+			}
+		}
+	}
 	public class saveEvent implements ActionListener
 	{
 		//triggered when user hits save button
