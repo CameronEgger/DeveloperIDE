@@ -213,7 +213,7 @@ public class Window
 						edit.setText(read);
 						phials.put(curr.toString(), read);
 					}
-					Button fileOpen = new Button(curr.toString());
+					Button fileOpen = new Button(curr.toString().substring(curr.toString().lastIndexOf("\\")+1));
 					fileOpener phial = new fileOpener(curr.toString());
 					fileOpen.addActionListener(phial);
 					fileButtons.add(fileOpen);
@@ -249,6 +249,7 @@ public class Window
 				phials.put(currentlyDisplayed, edit.getText());
 				currentlyDisplayed = fileName;
 				edit.setText(phials.get(fileName));
+				curr = new File(fileName);
 			}
 		}
 	}
