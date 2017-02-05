@@ -196,29 +196,39 @@ public class Window
 					curr = fileChooser.getSelectedFile();
 					
 					Scanner file = new Scanner(curr);
-					while(file.hasNextLine())
+					if(!phials.containsKey(curr.toString()))
 					{
-						read += file.nextLine() + "\n";
-					}
-					//resetting each time so that the file does not auto save when a new file is opened.
-					//otherwise all progress would be lost if i just reread the file.
-					if(edit.getText().equals(""))
-					{
-						edit.setText(read);
-						phials.put(curr.toString(), read);
+						while(file.hasNextLine())
+						{
+							read += file.nextLine() + "\n";
+						}
+						//resetting each time so that the file does not auto save when a new file is opened.
+						//otherwise all progress would be lost if i just reread the file.
+						if(edit.getText().equals(""))
+						{
+							edit.setText(read);
+							phials.put(curr.toString(), read);
+						}
+						else
+						{
+							phials.put(currentlyDisplayed, edit.getText());
+							edit.setText(read);
+							phials.put(curr.toString(), read);
+						}
+						Button fileOpen = new Button(curr.toString().substring(curr.toString().lastIndexOf("\\")+1));
+						fileOpener phial = new fileOpener(curr.toString());
+						fileOpen.addActionListener(phial);
+						fileButtons.add(fileOpen);
+						currentlyDisplayed = curr.toString();
+						Execute.update();
 					}
 					else
 					{
 						phials.put(currentlyDisplayed, edit.getText());
-						edit.setText(read);
-						phials.put(curr.toString(), read);
+						currentlyDisplayed = curr.toString();
+						edit.setText(phials.get(curr.toString()));
 					}
-					Button fileOpen = new Button(curr.toString().substring(curr.toString().lastIndexOf("\\")+1));
-					fileOpener phial = new fileOpener(curr.toString());
-					fileOpen.addActionListener(phial);
-					fileButtons.add(fileOpen);
-					currentlyDisplayed = curr.toString();
-					Execute.update();
+					
 				}
 
 			}
